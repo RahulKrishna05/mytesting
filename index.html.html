@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css?family=EB+Garamond" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>Document</title>
+</head>
+<body>
+    <header class="upper">
+        <div class="image-container">
+            <img src="images/logo.png" alt="logo" class="logo">
+        </div>
+        <div class="text-container">        
+            <label class="text">YOUR STYLE , OUR TAILORS</label>
+            <p class="subtitle">precision, passion, partnership</p>
+        </div>
+    </header>
+
+    <main class="lower">
+        <section class="lower-left">
+            <div class="mov-img">
+                <img src="images/shirt.png" alt="Shirt">
+            </div>
+            <label class="txt-hi" style="font-weight: bold;">Hi there! Welcome To Tailmate. Your Perfect Tailor is Just a Click Away.</label>
+        </section>
+
+        <section class="lower-right">
+            <label class="login-title">Log in</label><br>
+
+            <button class="google" id="google">
+                <img src="images/google.png" alt="google">
+            </button>
+            
+            <button class="facebook" id="facebook">
+                <img src="images/facebook.png" alt="facebook">
+            </button>
+
+            <p class="register-text">
+                Don't have an account? <a href="Register.html">Register</a>
+            </p>
+        </section>
+    </main>
+    
+    <script>
+        window.onload = function () {
+            document.getElementById("google").addEventListener("click", function () {
+                const client = google.accounts.oauth2.initTokenClient({
+                    client_id: "130297145188-ncu5njruj3bkf8mnj70arh9tv66idsto.apps.googleusercontent.com",
+                    scope: "openid email profile",
+                    callback: (response) => {
+                        if (response.access_token) {
+                            // Use access_token to fetch user info
+                            fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+                                headers: { Authorization: `Bearer ${response.access_token}` }
+                            })
+                            .then(res => res.json())
+                            .then(user => {
+                                localStorage.setItem("google_user", JSON.stringify(user));
+                                window.location.href = "profile.html";
+                            })
+                            .catch(err => alert("❌ Failed to get user info"));
+                        } else {
+                            alert("❌ Login Failed!");
+                        }
+                    }
+                });
+                client.requestAccessToken();
+            });
+        }
+    </script>
+</body>
+</html>
